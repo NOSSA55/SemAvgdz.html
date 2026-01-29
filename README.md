@@ -12,7 +12,12 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+        <!-- Theme Switcher -->
+<div class="theme-switcher">
+    <button class="theme-btn" id="themeToggle" title="Toggle theme">
+        <i class="fas fa-moon"></i>
+    </button>
+</div>
         body {
             background-color: #f5f7fa;
             color: #333;
