@@ -319,6 +319,62 @@
             color: #2c3e50;
             margin-top: 5px;
         }
+
+    /* Language Switcher */
+.language-switcher {
+    position: fixed;
+    top: 20px;
+    right: 90px;
+    z-index: 1001;
+}
+
+.language-btn {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    height: 50px;
+}
+
+.language-btn:hover {
+    background-color: #2c3e50;
+    transform: scale(1.05);
+}
+
+/* RTL Support for Arabic */
+body[dir="rtl"] .app-container,
+body[dir="rtl"] .subject-inputs {
+    text-align: right;
+}
+
+body[dir="rtl"] .checkbox-group,
+body[dir="rtl"] .weighting-group,
+body[dir="rtl"] .actions {
+    flex-direction: row-reverse;
+}
+
+body[dir="rtl"] th,
+body[dir="rtl"] td {
+    text-align: right;
+}
+
+body[dir="rtl"] .coefficient,
+body[dir="rtl"] .average {
+    text-align: center;
+}
+
+body[dir="rtl"] .component-icon {
+    margin-right: 0;
+    margin-left: 5px;
+    }
         
         .hidden {
             display: none;
