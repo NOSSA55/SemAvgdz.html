@@ -667,4 +667,283 @@
         </button>
     </div>
 
-    
+    <script>
+        // DOM elements
+        const subjectForm = document.getElementById('subjectForm');
+        const subjectsTableBody = document.getElementById('subjectsTableBody');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const averageResult = document.getElementById('averageResult');
+        const gradeText = document.getElementById('gradeText');
+        const resultContainer = document.getElementById('resultContainer');
+        
+        // Assessment type checkboxes
+        const hasTD = document.getElementById('hasTD');
+        const hasTP = document.getElementById('hasTP');
+        const hasExam = document.getElementById('hasExam');
+        
+        // Input groups
+        const tdGroup = document.getElementById('tdGroup');
+        const tpGroup = document.getElementById('tpGroup');
+        const examGroup = document.getElementById('examGroup');
+        const weightingSection = document.getElementById('weightingSection');
+        
+        // Weighting scheme selection
+        const weight40 = document.getElementById('weight40');
+        const weight50 = document.getElementById('weight50');
+        const weight40Radio = document.getElementById('weight40Radio');
+        const weight50Radio = document.getElementById('weight50Radio');
+        
+        // Initialize subjects array
+        let subjects = JSON.parse(localStorage.getItem('semesterSubjects')) || [];
+        
+        // Toggle input visibility based on checkboxes
+        function toggleInputs() {
+            const tdChecked = hasTD.checked;
+            const tpChecked = hasTP.checked;
+            const examChecked = hasExam.checked;
+            
+            tdGroup.classList.toggle('hidden', !tdChecked);
+            tpGroup.classList.toggle('hidden', !tpChecked);
+            examGroup.classList.toggle('hidden', !examChecked);
+            
+            // Show weighting section only if there's an exam AND at least one of TD or TP
+            const showWeighting = examChecked && (tdChecked || tpChecked);
+            weightingSection.classList.toggle('hidden', !showWeighting);
+            
+            // Validate that at least one component is selected
+            const componentError = document.getElementById('componentError');
+            if (!tdChecked && !tpChecked && !examChecked) {
+                componentError.style.display = 'block';
+            } else {
+                componentError.style.display = 'none';
+            }
+            
+            // Update required attribute for inputs based on checkboxes
+            document.getElementById('tdPoints').required = tdChecked;
+            document.getElementById('tpPoints').required = tpChecked;
+            document.getElementById('examPoints').required = examChecked;
+        }
+        
+        // Initialize toggle on page load
+        toggleInputs();
+        
+        // Add event listeners to checkboxes
+        hasTD.addEventListener('change', toggleInputs);
+        hasTP.addEventListener('change', toggleInputs);
+        hasExam.addEventListener('change', toggleInputs);
+        
+        // Weighting selection styling
+        weight40.addEventListener('click', function() {
+            weight40.classList.add('selected');
+            weight50.classList.remove('selected');
+            weight40Radio.checked = true;
+        });
+        
+        weight50.addEventListener('click', function() {
+            weight50.classList.add('selected');
+            weight40.classList.remove('selected');
+            weight50Radio.checked = true;
+        });
+        
+        // Calculate subject average based on assessment types and weighting scheme
+        function calculateSubjectAverage(subject) {
+            let average = 0;
+            
+            // Check if only one component is selected
+            const components = [];
+            if (subject.hasTD) components.push('TD');
+            if (subject.hasTP) components.push('TP');
+            if (subject.hasExam) components.push('Exam');
+            
+            // Case 1: Only one component (100% of that component)
+            if (components.length === 1) {
+                if (subject.hasTD) average = subject.tdPoints;
+                else if (subject.hasTP) average = subject.tpPoints;
+                else if (subject.hasExam) average = subject.examPoints;
+            }
+            // Case 2: Multiple components with weighting scheme
+            else {
+                // Calculate continuous assessment average (TD and/or TP)
+                let continuousAverage = 0;
+                let continuousCount = 0;
+                
+                if (subject.hasTD) {
+                    continuousAverage += subject.tdPoints;
+                    continuousCount++;
+                }
+                
+                if (subject.hasTP) {
+                    continuousAverage += subject.tpPoints;
+                    continuousCount++;
+                }
+                
+                if (continuousCount > 0) {
+                    continuousAverage = continuousAverage / continuousCount;
+                }
+                
+                // Determine weights based on scheme
+                let continuousWeight = 0.4; // Default 40%
+                let examWeight = 0.6; // Default 60%
+                
+                if (subject.weightingScheme === '50-50') {
+                    continuousWeight = 0.5;
+                    examWeight = 0.5;
+                }
+                
+                // Calculate average based on components present
+                if (subject.hasExam && (subject.hasTD || subject.hasTP)) {
+                    // TD/TP + Exam
+                    average = (continuousAverage * continuousWeight) + (subject.examPoints * examWeight);
+                } else if (subject.hasTD && subject.hasTP && !subject.hasExam) {
+                    // TD + TP only (no exam) - simple average
+                    average = continuousAverage;
+                }
+            }
+            
+            return Math.min(20, Math.max(0, average)); // Ensure average is between 0 and 20
+        }
+        
+        // Format number to 2 decimal places
+        function formatNumber(num) {
+            return parseFloat(num).toFixed(2);
+        }
+        
+        // Get component icons
+        function getComponentIcons(components) {
+            let icons = '';
+            if (components.includes('TD')) icons += '<i class="fas fa-chart-line component-icon" title="TD"></i>';
+            if (components.includes('TP')) icons += '<i class="fas fa-flask component-icon" title="TP"></i>';
+            if (components.includes('Exam')) icons += '<i class="fas fa-file-alt component-icon" title="Exam"></i>';
+            return icons;
+        }
+        
+        // Get weighting text
+        function getWeightingText(weightingScheme, hasTD, hasTP, hasExam) {
+            const components = [];
+            if (hasTD) components.push('TD');
+            if (hasTP) components.push('TP');
+            
+            // Single component
+            if (components.length === 0 || !hasExam) {
+                return '100%';
+            }
+            
+            // Multiple components with weighting
+            if (weightingScheme === '40-60') {
+                return '40/60';
+            } else {
+                return '50/50';
+            }
+        }
+        
+        // Add subject to the table
+        function addSubjectToTable(subject, index) {
+            // Create table row
+            const row = document.createElement('tr');
+            
+            // Calculate subject average
+            const subjectAverage = calculateSubjectAverage(subject);
+            
+            // Determine which components are included
+            let components = [];
+            if (subject.hasTD) components.push('TD');
+            if (subject.hasTP) components.push('TP');
+            if (subject.hasExam) components.push('Exam');
+            
+            // Get component icons
+            const componentIcons = getComponentIcons(components);
+            
+            // Get weighting text
+            const weightingText = getWeightingText(subject.weightingScheme, subject.hasTD, subject.hasTP, subject.hasExam);
+            
+            row.innerHTML = `
+                <td class="subject-name">${subject.name}</td>
+                <td>${componentIcons} ${components.join(' + ')}</td>
+                <td>${weightingText}</td>
+                <td class="coefficient">${subject.coefficient}</td>
+                <td class="average">${formatNumber(subjectAverage)}</td>
+                <td>
+                    <div class="actions">
+                        <button class="action-btn edit-btn" data-index="${index}" title="Edit subject">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" data-index="${index}" title="Delete subject">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            subjectsTableBody.appendChild(row);
+            
+            // Show table and hide empty message
+            emptyMessage.classList.add('hidden');
+        }
+        
+        // Render all subjects in the table
+        function renderSubjects() {
+            // Clear table
+            subjectsTableBody.innerHTML = '';
+            
+            if (subjects.length === 0) {
+                emptyMessage.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+                return;
+            }
+            
+            // Add each subject to the table
+            subjects.forEach((subject, index) => {
+                addSubjectToTable(subject, index);
+            });
+            
+            resultContainer.classList.remove('hidden');
+        }
+        
+        // Calculate overall average
+        function calculateOverallAverage() {
+            if (subjects.length === 0) {
+                averageResult.textContent = '0.00';
+                gradeText.textContent = 'Add subjects to calculate';
+                return;
+            }
+            
+            let totalWeightedSum = 0;
+            let totalCoefficients = 0;
+            
+            subjects.forEach(subject => {
+                const subjectAverage = calculateSubjectAverage(subject);
+                totalWeightedSum += subjectAverage * subject.coefficient;
+                totalCoefficients += parseInt(subject.coefficient);
+            });
+            
+            const overallAverage = totalWeightedSum / totalCoefficients;
+            averageResult.textContent = formatNumber(overallAverage);
+            
+            // Determine grade text
+            let grade = '';
+            if (overallAverage >= 16) {
+                grade = 'Excellent!';
+                gradeText.style.color = '#27ae60';
+            } else if (overallAverage >= 14) {
+                grade = 'Very Good';
+                gradeText.style.color = '#2ecc71';
+            } else if (overallAverage >= 12) {
+                grade = 'Good';
+                gradeText.style.color = '#3498db';
+            } else if (overallAverage >= 10) {
+                grade = 'Pass';
+                gradeText.style.color = '#f39c12';
+            } else {
+                grade = 'Needs Improvement';
+                gradeText.style.color = '#e74c3c';
+            }
+            
+            gradeText.textContent = grade;
+            
+            // Save to localStorage
+            localStorage.setItem('semesterSubjects', JSON.stringify(subjects));
+        }
+
+        
