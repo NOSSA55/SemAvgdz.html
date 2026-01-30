@@ -946,4 +946,276 @@
             localStorage.setItem('semesterSubjects', JSON.stringify(subjects));
         }
 
+                // Validate form inputs
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Check at least one component is selected
+            if (!hasTD.checked && !hasTP.checked && !hasExam.checked) {
+                document.getElementById('componentError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate TD points if TD is checked
+            if (hasTD.checked) {
+                const tdValue = parseFloat(document.getElementById('tdPoints').value);
+                if (isNaN(tdValue) || tdValue < 0 || tdValue > 20) {
+                    document.getElementById('tdError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            // Validate TP points if TP is checked
+            if (hasTP.checked) {
+                const tpValue = parseFloat(document.getElementById('tpPoints').value);
+                if (isNaN(tpValue) || tpValue < 0 || tpValue > 20) {
+                    document.getElementById('tpError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            // Validate Exam points if Exam is checked
+            if (hasExam.checked) {
+                const examValue = parseFloat(document.getElementById('examPoints').value);
+                if (isNaN(examValue) || examValue < 0 || examValue > 20) {
+                    document.getElementById('examError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
+        }
         
+        // Handle form submission
+        subjectForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Get form values
+            const subjectName = document.getElementById('subjectName').value;
+            const hasTDChecked = hasTD.checked;
+            const hasTPChecked = hasTP.checked;
+            const hasExamChecked = hasExam.checked;
+            const tdPoints = parseFloat(document.getElementById('tdPoints').value) || 0;
+            const tpPoints = parseFloat(document.getElementById('tpPoints').value) || 0;
+            const examPoints = parseFloat(document.getElementById('examPoints').value) || 0;
+            const weightingScheme = document.querySelector('input[name="weighting"]:checked').value;
+            const coefficient = parseInt(document.getElementById('coefficient').value);
+            
+            // Create subject object
+            const subject = {
+                name: subjectName,
+                hasTD: hasTDChecked,
+                hasTP: hasTPChecked,
+                hasExam: hasExamChecked,
+                tdPoints: tdPoints,
+                tpPoints: tpPoints,
+                examPoints: examPoints,
+                weightingScheme: weightingScheme,
+                coefficient: coefficient
+            };
+            
+            // Add to subjects array
+            subjects.push(subject);
+            
+            // Render subjects
+            renderSubjects();
+            
+            // Calculate overall average
+            calculateOverallAverage();
+            
+            // Reset form
+            subjectForm.reset();
+            weight40.classList.add('selected');
+            weight50.classList.remove('selected');
+            weight40Radio.checked = true;
+            toggleInputs();
+            
+            // Scroll to results
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Handle edit and delete buttons
+        subjectsTableBody.addEventListener('click', function(e) {
+            const target = e.target;
+            const button = target.closest('button');
+            
+            if (!button) return;
+            
+            const index = parseInt(button.getAttribute('data-index'));
+            
+            if (button.classList.contains('delete-btn')) {
+                // Delete subject
+                subjects.splice(index, 1);
+                renderSubjects();
+                calculateOverallAverage();
+            } else if (button.classList.contains('edit-btn')) {
+                // Edit subject
+                const subject = subjects[index];
+                
+                // Populate form with subject data
+                document.getElementById('subjectName').value = subject.name;
+                hasTD.checked = subject.hasTD;
+                hasTP.checked = subject.hasTP;
+                hasExam.checked = subject.hasExam;
+                document.getElementById('tdPoints').value = subject.tdPoints;
+                document.getElementById('tpPoints').value = subject.tpPoints;
+                document.getElementById('examPoints').value = subject.examPoints;
+                
+                // Set weighting scheme
+                if (subject.weightingScheme === '40-60') {
+                    weight40.classList.add('selected');
+                    weight50.classList.remove('selected');
+                    weight40Radio.checked = true;
+                } else {
+                    weight50.classList.add('selected');
+                    weight40.classList.remove('selected');
+                    weight50Radio.checked = true;
+                }
+                
+                document.getElementById('coefficient').value = subject.coefficient;
+                
+                // Toggle inputs
+                toggleInputs();
+                
+                // Remove subject from array
+                subjects.splice(index, 1);
+                
+                // Re-render
+                renderSubjects();
+                calculateOverallAverage();
+                
+                // Scroll to form
+                document.getElementById('subjectName').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        
+        // Calculate average button
+        calculateBtn.addEventListener('click', calculateOverallAverage);
+        
+        // Clear all subjects button
+        clearAllBtn.addEventListener('click', function() {
+            if (subjects.length > 0 && confirm('Are you sure you want to clear all subjects?')) {
+                subjects = [];
+                localStorage.removeItem('semesterSubjects');
+                renderSubjects();
+                calculateOverallAverage();
+            }
+        });
+        
+        // Theme switcher functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+
+        // Check for saved theme or prefer-color-scheme
+        function getPreferredTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            
+            // Check for system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+            return 'light';
+        }
+
+        // Set initial theme
+        const currentTheme = getPreferredTheme();
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        // Toggle theme function
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+        
+        // Load subjects from localStorage and render on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSubjects();
+            calculateOverallAverage();
+            
+            // Add some sample subjects if none exist
+            if (subjects.length === 0) {
+                // Uncomment the line below to load sample subjects by default
+                // loadSampleSubjects();
+            }
+        });
+        
+        // Function to load sample subjects
+        function loadSampleSubjects() {
+            const sampleSubjects = [
+                {
+                    name: "Mathematics",
+                    hasTD: true,
+                    hasTP: false,
+                    hasExam: true,
+                    tdPoints: 16,
+                    tpPoints: 0,
+                    examPoints: 14,
+                    weightingScheme: "40-60",
+                    coefficient: 4
+                },
+                {
+                    name: "Physics",
+                    hasTD: true,
+                    hasTP: true,
+                    hasExam: true,
+                    tdPoints: 15,
+                    tpPoints: 17,
+                    examPoints: 13,
+                    weightingScheme: "50-50",
+                    coefficient: 3
+                },
+                {
+                    name: "Programming",
+                    hasTD: false,
+                    hasTP: true,
+                    hasExam: true,
+                    tdPoints: 0,
+                    tpPoints: 18,
+                    examPoints: 16,
+                    weightingScheme: "40-60",
+                    coefficient: 3
+                },
+                {
+                    name: "English",
+                    hasTD: false,
+                    hasTP: false,
+                    hasExam: true,
+                    tdPoints: 0,
+                    tpPoints: 0,
+                    examPoints: 15,
+                    weightingScheme: "40-60",
+                    coefficient: 2
+                }
+            ];
+            
+            subjects = sampleSubjects;
+            renderSubjects();
+            calculateOverallAverage();
+        }
+    </script>
+</body>
+</html>
+
