@@ -566,6 +566,17 @@ body[dir="rtl"] .component-icon {
         <header>
             <h1><i class="fas fa-calculator"></i> Semester Average Calculator</h1>
             <p class="subtitle">Calculate your semester average with multiple weighting schemes</p>
+            <header>
+    <h1><i class="fas fa-calculator"></i> Semester Average Calculator</h1>
+    <p class="subtitle">Calculate your semester average with multiple weighting schemes</p>
+    
+    <!-- Language Switcher Button -->
+    <div class="language-switcher">
+        <button id="languageSwitch" class="language-btn">
+            <i class="fas fa-language"></i> العربية
+        </button>
+    </div>
+</header>
         </header>
         
         <div class="app-container">
@@ -724,6 +735,124 @@ body[dir="rtl"] .component-icon {
     </div>
 
     <script>
+    // Language Support
+const translations = {
+    en: {
+        // Header
+        title: "Semester Average Calculator",
+        subtitle: "Calculate your semester average with multiple weighting schemes",
+        languageButton: "العربية",
+        
+        // Form
+        addSubject: "Add Subject",
+        subjectName: "Subject Name",
+        assessmentComponents: "Assessment Components",
+        td: "TD",
+        tp: "TP",
+        exam: "Exam",
+        tdPoints: "TD Points (out of 20)",
+        tpPoints: "TP Points (out of 20)",
+        examPoints: "Exam Points (out of 20)",
+        weightingScheme: "Weighting Scheme",
+        weighting40: "40% TD/TP + 60% Exam",
+        weighting50: "50% TD/TP + 50% Exam",
+        coefficient: "Coefficient",
+        addSubjectButton: "Add Subject",
+        
+        // Instructions
+        instructionsTitle: "How to Calculate",
+        instruction1: "Single component (Exam, TD, or TP only): Subject average = Component points (100%)",
+        instruction2: "TD + Exam or TP + Exam with 40/60: (TD/TP × 0.4) + (Exam × 0.6)",
+        instruction3: "TD + Exam or TP + Exam with 50/50: (TD/TP × 0.5) + (Exam × 0.5)",
+        instruction4: "TD + TP + Exam with 40/60: ((TD+TP)÷2 × 0.4) + (Exam × 0.6)",
+        instruction5: "TD + TP + Exam with 50/50: ((TD+TP)÷2 × 0.5) + (Exam × 0.5)",
+        instruction6: "Overall average: Sum of (subject average × coefficient) ÷ Sum of coefficients",
+        
+        // Subjects Table
+        subjectsTitle: "Subjects",
+        tableSubject: "Subject",
+        tableComponents: "Components",
+        tableWeighting: "Weighting",
+        tableCoefficient: "Coefficient",
+        tableAverage: "Average",
+        tableActions: "Actions",
+        calculateAverage: "Calculate Average",
+        clearAll: "Clear All Subjects",
+        
+        // Results
+        semesterAverage: "Your Semester Average",
+        addSubjectsToCalculate: "Add subjects to calculate",
+        excellent: "Excellent!",
+        veryGood: "Very Good",
+        good: "Good",
+        pass: "Pass",
+        needsImprovement: "Needs Improvement",
+        
+        // Messages
+        noSubjects: "No subjects added yet. Add your first subject using the form on the left.",
+        confirmClear: "Are you sure you want to clear all subjects?",
+        websiteBy: "This website was made by NOSSA 55"
+    },
+    ar: {
+        // Header
+        title: "حاسبة معدل الفصل الدراسي",
+        subtitle: "احسب معدل فصلك الدراسي بمخططات وزن متعددة",
+        languageButton: "English",
+        
+        // Form
+        addSubject: "إضافة مادة",
+        subjectName: "اسم المادة",
+        assessmentComponents: "مكونات التقييم",
+        td: "تمارين",
+        tp: "عمل عملي",
+        exam: "امتحان",
+        tdPoints: "نقاط التمارين (من 20)",
+        tpPoints: "نقاط العمل العملي (من 20)",
+        examPoints: "نقاط الامتحان (من 20)",
+        weightingScheme: "مخطط الوزن",
+        weighting40: "40% تمارين/عمل عملي + 60% امتحان",
+        weighting50: "50% تمارين/عمل عملي + 50% امتحان",
+        coefficient: "المعامل",
+        addSubjectButton: "إضافة مادة",
+        
+        // Instructions
+        instructionsTitle: "طريقة الحساب",
+        instruction1: "مكون واحد فقط (امتحان، تمارين، أو عمل عملي): متوسط المادة = نقاط المكون (100%)",
+        instruction2: "تمارين + امتحان أو عمل عملي + امتحان مع 40/60: (التمارين × 0.4) + (الامتحان × 0.6)",
+        instruction3: "تمارين + امتحان أو عمل عملي + امتحان مع 50/50: (التمارين × 0.5) + (الامتحان × 0.5)",
+        instruction4: "تمارين + عمل عملي + امتحان مع 40/60: ((التمارين+العمل العملي)÷2 × 0.4) + (الامتحان × 0.6)",
+        instruction5: "تمارين + عمل عملي + امتحان مع 50/50: ((التمارين+العمل العملي)÷2 × 0.5) + (الامتحان × 0.5)",
+        instruction6: "المعدل العام: مجموع (متوسط المادة × المعامل) ÷ مجموع المعاملات",
+        
+        // Subjects Table
+        subjectsTitle: "المواد",
+        tableSubject: "المادة",
+        tableComponents: "المكونات",
+        tableWeighting: "الوزن",
+        tableCoefficient: "المعامل",
+        tableAverage: "المتوسط",
+        tableActions: "الإجراءات",
+        calculateAverage: "حساب المعدل",
+        clearAll: "مسح جميع المواد",
+        
+        // Results
+        semesterAverage: "معدل الفصل الدراسي",
+        addSubjectsToCalculate: "أضف مواد للحساب",
+        excellent: "ممتاز!",
+        veryGood: "جيد جداً",
+        good: "جيد",
+        pass: "ناجح",
+        needsImprovement: "بحاجة إلى تحسين",
+        
+        // Messages
+        noSubjects: "لا توجد مواد مضافة بعد. أضف مادتك الأولى باستخدام النموذج على اليسار.",
+        confirmClear: "هل أنت متأكد أنك تريد مسح جميع المواد؟",
+        websiteBy: "هذا الموقع من صنع NOSSA 55"
+    }
+};
+
+let currentLang = localStorage.getItem('language') || 'en';
+
         // DOM elements
         const subjectForm = document.getElementById('subjectForm');
         const subjectsTableBody = document.getElementById('subjectsTableBody');
@@ -865,7 +994,90 @@ body[dir="rtl"] .component-icon {
         function formatNumber(num) {
             return parseFloat(num).toFixed(2);
         }
-        
+        // Update all text elements with translations
+function updateLanguage() {
+    const lang = translations[currentLang];
+    
+    // Update header
+    document.querySelector('h1').innerHTML = `<i class="fas fa-calculator"></i> ${lang.title}`;
+    document.querySelector('.subtitle').textContent = lang.subtitle;
+    
+    // Update language button
+    document.querySelector('#languageSwitch i').nextSibling.textContent = ` ${lang.languageButton}`;
+    
+    // Update form
+    document.querySelectorAll('.card h2')[0].innerHTML = `<i class="fas fa-plus-circle"></i> ${lang.addSubject}`;
+    document.querySelector('label[for="subjectName"]').textContent = lang.subjectName;
+    document.querySelectorAll('.form-section label')[0].textContent = lang.assessmentComponents;
+    document.querySelector('label[for="hasTD"]').textContent = lang.td;
+    document.querySelector('label[for="hasTP"]').textContent = lang.tp;
+    document.querySelector('label[for="hasExam"]').textContent = lang.exam;
+    document.querySelector('label[for="tdPoints"]').textContent = lang.tdPoints;
+    document.querySelector('label[for="tpPoints"]').textContent = lang.tpPoints;
+    document.querySelector('label[for="examPoints"]').textContent = lang.examPoints;
+    document.querySelector('#weightingSection label').textContent = lang.weightingScheme;
+    document.querySelector('label[for="weight40Radio"]').textContent = lang.weighting40;
+    document.querySelector('label[for="weight50Radio"]').textContent = lang.weighting50;
+    document.querySelector('label[for="coefficient"]').textContent = lang.coefficient;
+    document.querySelector('.btn-secondary i').nextSibling.textContent = ` ${lang.addSubjectButton}`;
+    
+    // Update instructions
+    document.querySelector('.instructions h3').innerHTML = `<i class="fas fa-info-circle"></i> ${lang.instructionsTitle}`;
+    const instructions = document.querySelectorAll('.instructions li');
+    instructions[0].innerHTML = `<strong>${lang.instruction1.split(':')[0]}:</strong> ${lang.instruction1.split(':')[1]}`;
+    instructions[1].innerHTML = `<strong>${lang.instruction2.split(':')[0]}:</strong> ${lang.instruction2.split(':')[1]}`;
+    instructions[2].innerHTML = `<strong>${lang.instruction3.split(':')[0]}:</strong> ${lang.instruction3.split(':')[1]}`;
+    instructions[3].innerHTML = `<strong>${lang.instruction4.split(':')[0]}:</strong> ${lang.instruction4.split(':')[1]}`;
+    instructions[4].innerHTML = `<strong>${lang.instruction5.split(':')[0]}:</strong> ${lang.instruction5.split(':')[1]}`;
+    instructions[5].innerHTML = `<strong>${lang.instruction6.split(':')[0]}:</strong> ${lang.instruction6.split(':')[1]}`;
+    
+    // Update subjects table
+    document.querySelectorAll('.card h2')[1].innerHTML = `<i class="fas fa-list-alt"></i> ${lang.subjectsTitle}`;
+    const tableHeaders = document.querySelectorAll('#subjectsTable th');
+    tableHeaders[0].textContent = lang.tableSubject;
+    tableHeaders[1].textContent = lang.tableComponents;
+    tableHeaders[2].textContent = lang.tableWeighting;
+    tableHeaders[3].textContent = lang.tableCoefficient;
+    tableHeaders[4].textContent = lang.tableAverage;
+    tableHeaders[5].textContent = lang.tableActions;
+    
+    // Update empty message
+    document.querySelector('#emptyMessage p').textContent = lang.noSubjects;
+    
+    // Update results
+    document.querySelector('.result-label').textContent = lang.semesterAverage;
+    if (document.getElementById('gradeText').textContent === 'Add subjects to calculate') {
+        document.getElementById('gradeText').textContent = lang.addSubjectsToCalculate;
+    }
+    
+    // Update buttons
+    document.querySelector('#calculateBtn i').nextSibling.textContent = ` ${lang.calculateAverage}`;
+    document.querySelector('#clearAllBtn i').nextSibling.textContent = ` ${lang.clearAll}`;
+    
+    // Update footer
+    document.querySelector('.footer-text').textContent = lang.websiteBy;
+    
+    // Update placeholders
+    document.getElementById('subjectName').placeholder = currentLang === 'en' ? 'e.g., Mathematics' : 'مثال: رياضيات';
+    
+    // Update direction for Arabic
+    if (currentLang === 'ar') {
+        document.body.setAttribute('dir', 'rtl');
+        document.body.style.textAlign = 'right';
+    } else {
+        document.body.setAttribute('dir', 'ltr');
+        document.body.style.textAlign = 'left';
+    }
+    
+    // Save language preference
+    localStorage.setItem('language', currentLang);
+    
+    // Update grade text if average is already calculated
+    if (subjects.length > 0) {
+        calculateOverallAverage();
+    }
+}
+
         // Get component icons
         function getComponentIcons(components) {
             let icons = '';
@@ -977,24 +1189,24 @@ body[dir="rtl"] .component-icon {
             const overallAverage = totalWeightedSum / totalCoefficients;
             averageResult.textContent = formatNumber(overallAverage);
             
-            // Determine grade text
-            let grade = '';
-            if (overallAverage >= 16) {
-                grade = 'Excellent!';
-                gradeText.style.color = '#27ae60';
-            } else if (overallAverage >= 14) {
-                grade = 'Very Good';
-                gradeText.style.color = '#2ecc71';
-            } else if (overallAverage >= 12) {
-                grade = 'Good';
-                gradeText.style.color = '#3498db';
-            } else if (overallAverage >= 10) {
-                grade = 'Pass';
-                gradeText.style.color = '#f39c12';
-            } else {
-                grade = 'Needs Improvement';
-                gradeText.style.color = '#e74c3c';
-            }
+            // Determine grade text - UPDATED FOR MULTILANGUAGE
+let grade = '';
+if (overallAverage >= 16) {
+    grade = translations[currentLang].excellent;
+    gradeText.style.color = '#27ae60';
+} else if (overallAverage >= 14) {
+    grade = translations[currentLang].veryGood;
+    gradeText.style.color = '#2ecc71';
+} else if (overallAverage >= 12) {
+    grade = translations[currentLang].good;
+    gradeText.style.color = '#3498db';
+} else if (overallAverage >= 10) {
+    grade = translations[currentLang].pass;
+    gradeText.style.color = '#f39c12';
+} else {
+    grade = translations[currentLang].needsImprovement;
+    gradeText.style.color = '#e74c3c';
+}
             
             gradeText.textContent = grade;
             
@@ -1158,14 +1370,25 @@ body[dir="rtl"] .component-icon {
         calculateBtn.addEventListener('click', calculateOverallAverage);
         
         // Clear all subjects button
-        clearAllBtn.addEventListener('click', function() {
-            if (subjects.length > 0 && confirm('Are you sure you want to clear all subjects?')) {
-                subjects = [];
-                localStorage.removeItem('semesterSubjects');
-                renderSubjects();
-                calculateOverallAverage();
-            }
-        });
+        // Clear all subjects button - UPDATED WITH TRANSLATION
+clearAllBtn.addEventListener('click', function() {
+    const confirmMessage = currentLang === 'en' ? 
+        'Are you sure you want to clear all subjects?' : 
+        'هل أنت متأكد أنك تريد مسح جميع المواد؟';
+    
+    if (subjects.length > 0 && confirm(confirmMessage)) {
+        subjects = [];
+        localStorage.removeItem('semesterSubjects');
+        renderSubjects();
+        calculateOverallAverage();
+    }
+});
+
+// Language switcher
+document.getElementById('languageSwitch').addEventListener('click', function() {
+    currentLang = currentLang === 'en' ? 'ar' : 'en';
+    updateLanguage();
+});
         
         // Theme switcher functionality
         const themeToggle = document.getElementById('themeToggle');
@@ -1207,16 +1430,21 @@ body[dir="rtl"] .component-icon {
         });
         
         // Load subjects from localStorage and render on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            renderSubjects();
-            calculateOverallAverage();
-            
-            // Add some sample subjects if none exist
-            if (subjects.length === 0) {
-                // Uncomment the line below to load sample subjects by default
-                // loadSampleSubjects();
-            }
-        });
+        // Load subjects from localStorage and render on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set language first
+    updateLanguage();
+    
+    // Then render everything else
+    renderSubjects();
+    calculateOverallAverage();
+    
+    // Add some sample subjects if none exist
+    if (subjects.length === 0) {
+        // Uncomment the line below to load sample subjects by default
+        // loadSampleSubjects();
+    }
+});
         
         // Function to load sample subjects
         function loadSampleSubjects() {
