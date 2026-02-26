@@ -674,3 +674,218 @@
         }
     </style>
 </head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Semester Average Calculator</h1>
+            <p class="subtitle">Calculate your semester average with multiple weighting schemes</p>
+            
+            <!-- Language Switcher Button -->
+            <div class="language-switcher">
+                <button id="languageSwitch" class="language-btn">
+                    <i class="fas fa-language"></i> العربية
+                </button>
+            </div>
+        </header>
+        
+        <div class="app-container">
+            <div>
+                <div class="card">
+                    <h2><i class="fas fa-plus-circle"></i> Add Subject</h2>
+                    
+                    <form id="subjectForm">
+                        <div class="form-group">
+                            <label for="subjectName">Subject Name</label>
+                            <input type="text" id="subjectName" placeholder="e.g., Mathematics" required>
+                        </div>
+                        
+                        <div class="form-section">
+                            <label>Assessment Components</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasTD">
+                                    <label for="hasTD" style="display: inline; font-weight: normal;">TD</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasTP">
+                                    <label for="hasTP" style="display: inline; font-weight: normal;">TP</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasExam">
+                                    <label for="hasExam" style="display: inline; font-weight: normal;">Exam</label>
+                                </div>
+                            </div>
+                            <div class="error-message" id="componentError">Please select at least one component</div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <div class="subject-inputs">
+                                <div class="form-group" id="tdGroup">
+                                    <label for="tdPoints">TD Points (out of 20)</label>
+                                    <input type="number" id="tdPoints" min="0" max="20" step="0.1" placeholder="0-20">
+                                    <div class="error-message" id="tdError">TD points must be between 0 and 20</div>
+                                </div>
+                                
+                                <div class="form-group" id="tpGroup">
+                                    <label for="tpPoints">TP Points (out of 20)</label>
+                                    <input type="number" id="tpPoints" min="0" max="20" step="0.1" placeholder="0-20">
+                                    <div class="error-message" id="tpError">TP points must be between 0 and 20</div>
+                                </div>
+                                
+                                <div class="form-group" id="examGroup">
+                                    <label for="examPoints">Exam Points (out of 20)</label>
+                                    <input type="number" id="examPoints" min="0" max="20" step="0.1" placeholder="0-20">
+                                    <div class="error-message" id="examError">Exam points must be between 0 and 20</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section" id="weightingSection">
+                            <label for="weightingScheme">Weighting Scheme</label>
+                            <div class="weighting-group">
+                                <div class="weighting-item" id="weight40">
+                                    <input type="radio" id="weight40Radio" name="weighting" value="40-60" checked>
+                                    <label for="weight40Radio">40% TD/TP + 60% Exam</label>
+                                </div>
+                                <div class="weighting-item" id="weight50">
+                                    <input type="radio" id="weight50Radio" name="weighting" value="50-50">
+                                    <label for="weight50Radio">50% TD/TP + 50% Exam</label>
+                                </div>
+                            </div>
+                            <div class="error-message" id="weightingError">Please select a weighting scheme</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="coefficient">Coefficient</label>
+                            <select id="coefficient">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i> Add Subject
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card instructions">
+                    <h3><i class="fas fa-info-circle"></i> How to Calculate</h3>
+                    <ul>
+                        <li><strong>Single component (Exam, TD, or TP only):</strong> Subject average = Component points (100%)</li>
+                        <li><strong>TD + Exam or TP + Exam with 40/60:</strong> (TD/TP × 0.4) + (Exam × 0.6)</li>
+                        <li><strong>TD + Exam or TP + Exam with 50/50:</strong> (TD/TP × 0.5) + (Exam × 0.5)</li>
+                        <li><strong>TD + TP + Exam with 40/60:</strong> ((TD+TP)÷2 × 0.4) + (Exam × 0.6)</li>
+                        <li><strong>TD + TP + Exam with 50/50:</strong> ((TD+TP)÷2 × 0.5) + (Exam × 0.5)</li>
+                        <li><strong>Overall average:</strong> Sum of (subject average × coefficient) ÷ Sum of coefficients</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div>
+                <div class="card">
+                    <h2><i class="fas fa-list-alt"></i> Subjects</h2>
+                    
+                    <div id="subjectsTableContainer">
+                        <table id="subjectsTable">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Components</th>
+                                    <th>Weighting</th>
+                                    <th>Coefficient</th>
+                                    <th>Average</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectsTableBody">
+                                <!-- Subjects will be added here dynamically -->
+                            </tbody>
+                        </table>
+                        
+                        <div id="emptyMessage" class="empty-message">
+                            <i class="fas fa-book-open fa-2x" style="margin-bottom: 15px;"></i>
+                            <p>No subjects added yet. Add your first subject using the form on the left.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box" id="resultContainer">
+                        <div class="result-label">Your Semester Average</div>
+                        <div class="result-value" id="averageResult">0.00</div>
+                        <div class="grade" id="gradeText">Add subjects to calculate</div>
+                    </div>
+                    
+                    <button id="calculateBtn" class="btn btn-calculate" style="margin-top: 20px;">
+                        <i class="fas fa-calculator"></i> Calculate Average
+                    </button>
+                    
+                    <button id="clearAllBtn" class="btn" style="margin-top: 10px; background-color: #e74c3c;">
+                        <i class="fas fa-trash-alt"></i> Clear All Subjects
+                    </button>
+                    
+                    <div class="export-buttons" style="margin-top: 15px;">
+                        <button class="btn btn-export" id="exportBtn">
+                            <i class="fas fa-file-export"></i> Export Data
+                        </button>
+                        <button class="btn btn-import" id="showImportModal">
+                            <i class="fas fa-file-import"></i> Import Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Semester Average Calculator</p>
+            <p class="footer-text">This website was made by NOSSA 55</p>
+        </footer>
+    </div>
+
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+        <button class="theme-btn" id="themeToggle" title="Toggle theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Export/Import Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-export"></i> Export/Import Data</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            
+            <div class="warning-message">
+                <i class="fas fa-exclamation-triangle"></i> Importing data will replace all current subjects! 
+                You currently have <span class="subject-count">0</span> subjects.
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Data exported successfully!
+            </div>
+            
+            <div class="form-group">
+                <label for="exportData">Export Data (JSON)</label>
+                <textarea id="exportData" rows="6" readonly placeholder="Your data will appear here..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="importData">Import Data (Paste JSON here)</label>
+                <textarea id="importData" rows="6" placeholder='Paste your data here in format: [{"name":"Math","hasTD":true,...}]'></textarea>
+            </div>
+            
+            <div class="export-buttons">
+                <button class="btn btn-export" id="copyData">
+                    <i class="fas fa-copy"></i> Copy to Clipboard
+                </button>
+                <button class="btn btn-import" id="importDataBtn">
+                    <i class="fas fa-file-import"></i> Import Data
+                </button>
+            </div>
+        </div>
+    </div>
