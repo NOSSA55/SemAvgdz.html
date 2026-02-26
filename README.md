@@ -889,3 +889,587 @@
             </div>
         </div>
     </div>
+<script>
+        // Language Support
+        const translations = {
+            en: {
+                // Header
+                title: "Semester Average Calculator",
+                subtitle: "Calculate your semester average with multiple weighting schemes",
+                languageButton: "العربية",
+                
+                // Form
+                addSubject: "Add Subject",
+                subjectName: "Subject Name",
+                assessmentComponents: "Assessment Components",
+                td: "TD",
+                tp: "TP",
+                exam: "Exam",
+                tdPoints: "TD Points (out of 20)",
+                tpPoints: "TP Points (out of 20)",
+                examPoints: "Exam Points (out of 20)",
+                weightingScheme: "Weighting Scheme",
+                weighting40: "40% TD/TP + 60% Exam",
+                weighting50: "50% TD/TP + 50% Exam",
+                coefficient: "Coefficient",
+                addSubjectButton: "Add Subject",
+                
+                // Instructions
+                instructionsTitle: "How to Calculate",
+                instruction1: "Single component (Exam, TD, or TP only): Subject average = Component points (100%)",
+                instruction2: "TD + Exam or TP + Exam with 40/60: (TD/TP × 0.4) + (Exam × 0.6)",
+                instruction3: "TD + Exam or TP + Exam with 50/50: (TD/TP × 0.5) + (Exam × 0.5)",
+                instruction4: "TD + TP + Exam with 40/60: ((TD+TP)÷2 × 0.4) + (Exam × 0.6)",
+                instruction5: "TD + TP + Exam with 50/50: ((TD+TP)÷2 × 0.5) + (Exam × 0.5)",
+                instruction6: "Overall average: Sum of (subject average × coefficient) ÷ Sum of coefficients",
+                
+                // Subjects Table
+                subjectsTitle: "Subjects",
+                tableSubject: "Subject",
+                tableComponents: "Components",
+                tableWeighting: "Weighting",
+                tableCoefficient: "Coefficient",
+                tableAverage: "Average",
+                tableActions: "Actions",
+                calculateAverage: "Calculate Average",
+                clearAll: "Clear All Subjects",
+                
+                // Results
+                semesterAverage: "Your Semester Average",
+                addSubjectsToCalculate: "Add subjects to calculate",
+                excellent: "Excellent!",
+                veryGood: "Very Good",
+                good: "Good",
+                pass: "Pass",
+                needsImprovement: "Needs Improvement",
+                
+                // Messages
+                noSubjects: "No subjects added yet. Add your first subject using the form on the left.",
+                confirmClear: "Are you sure you want to clear all subjects?",
+                websiteBy: "This website was made by NOSSA 55",
+                
+                // Export/Import
+                exportImport: "Export/Import Data",
+                importWarning: "Importing data will replace all current subjects!",
+                exportSuccess: "Data exported successfully!",
+                copySuccess: "Data copied to clipboard!",
+                importSuccess: "Successfully imported subjects!",
+                exportPlaceholder: "Your data will appear here...",
+                importPlaceholder: "Paste your data here...",
+                copyButton: "Copy to Clipboard",
+                importButton: "Import Data"
+            },
+            ar: {
+                // Header
+                title: "حاسبة معدل الفصل الدراسي",
+                subtitle: "احسب معدل فصلك الدراسي بمخططات وزن متعددة",
+                languageButton: "English",
+                
+                // Form
+                addSubject: "إضافة مادة",
+                subjectName: "اسم المادة",
+                assessmentComponents: "مكونات التقييم",
+                td: "تمارين",
+                tp: "عمل عملي",
+                exam: "امتحان",
+                tdPoints: "نقاط التمارين (من 20)",
+                tpPoints: "نقاط العمل العملي (من 20)",
+                examPoints: "نقاط الامتحان (من 20)",
+                weightingScheme: "مخطط الوزن",
+                weighting40: "40% تمارين/عمل عملي + 60% امتحان",
+                weighting50: "50% تمارين/عمل عملي + 50% امتحان",
+                coefficient: "المعامل",
+                addSubjectButton: "إضافة مادة",
+                
+                // Instructions
+                instructionsTitle: "طريقة الحساب",
+                instruction1: "مكون واحد فقط (امتحان، تمارين، أو عمل عملي): متوسط المادة = نقاط المكون (100%)",
+                instruction2: "تمارين + امتحان أو عمل عملي + امتحان مع 40/60: (التمارين × 0.4) + (الامتحان × 0.6)",
+                instruction3: "تمارين + امتحان أو عمل عملي + امتحان مع 50/50: (التمارين × 0.5) + (الامتحان × 0.5)",
+                instruction4: "تمارين + عمل عملي + امتحان مع 40/60: ((التمارين+العمل العملي)÷2 × 0.4) + (الامتحان × 0.6)",
+                instruction5: "تمارين + عمل عملي + امتحان مع 50/50: ((التمارين+العمل العملي)÷2 × 0.5) + (الامتحان × 0.5)",
+                instruction6: "المعدل العام: مجموع (متوسط المادة × المعامل) ÷ مجموع المعاملات",
+                
+                // Subjects Table
+                subjectsTitle: "المواد",
+                tableSubject: "المادة",
+                tableComponents: "المكونات",
+                tableWeighting: "الوزن",
+                tableCoefficient: "المعامل",
+                tableAverage: "المتوسط",
+                tableActions: "الإجراءات",
+                calculateAverage: "حساب المعدل",
+                clearAll: "مسح جميع المواد",
+                
+                // Results
+                semesterAverage: "معدل الفصل الدراسي",
+                addSubjectsToCalculate: "أضف مواد للحساب",
+                excellent: "ممتاز!",
+                veryGood: "جيد جداً",
+                good: "جيد",
+                pass: "ناجح",
+                needsImprovement: "بحاجة إلى تحسين",
+                
+                // Messages
+                noSubjects: "لا توجد مواد مضافة بعد. أضف مادتك الأولى باستخدام النموذج على اليسار.",
+                confirmClear: "هل أنت متأكد أنك تريد مسح جميع المواد؟",
+                websiteBy: "هذا الموقع من صنع NOSSA 55",
+                
+                // Export/Import
+                exportImport: "تصدير/استيراد البيانات",
+                importWarning: "استيراد البيانات سيستبدل جميع المواد الحالية!",
+                exportSuccess: "تم تصدير البيانات بنجاح!",
+                copySuccess: "تم نسخ البيانات إلى الحافظة!",
+                importSuccess: "تم استيراد المواد بنجاح!",
+                exportPlaceholder: "ستظهر بياناتك هنا...",
+                importPlaceholder: "الصق بياناتك هنا...",
+                copyButton: "نسخ إلى الحافظة",
+                importButton: "استيراد البيانات"
+            }
+        };
+        
+        let currentLang = localStorage.getItem('language') || 'en';
+
+        // DOM elements
+        const subjectForm = document.getElementById('subjectForm');
+        const subjectsTableBody = document.getElementById('subjectsTableBody');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const averageResult = document.getElementById('averageResult');
+        const gradeText = document.getElementById('gradeText');
+        const resultContainer = document.getElementById('resultContainer');
+        
+        // Assessment type checkboxes
+        const hasTD = document.getElementById('hasTD');
+        const hasTP = document.getElementById('hasTP');
+        const hasExam = document.getElementById('hasExam');
+        
+        // Input groups
+        const tdGroup = document.getElementById('tdGroup');
+        const tpGroup = document.getElementById('tpGroup');
+        const examGroup = document.getElementById('examGroup');
+        const weightingSection = document.getElementById('weightingSection');
+        
+        // Weighting scheme selection
+        const weight40 = document.getElementById('weight40');
+        const weight50 = document.getElementById('weight50');
+        const weight40Radio = document.getElementById('weight40Radio');
+        const weight50Radio = document.getElementById('weight50Radio');
+        
+        // Export/Import elements
+        const exportBtn = document.getElementById('exportBtn');
+        const showImportModalBtn = document.getElementById('showImportModal');
+        const exportModal = document.getElementById('exportModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const copyDataBtn = document.getElementById('copyData');
+        const importDataBtn = document.getElementById('importDataBtn');
+        const exportDataTextarea = document.getElementById('exportData');
+        const importDataTextarea = document.getElementById('importData');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Initialize subjects array
+        let subjects = JSON.parse(localStorage.getItem('semesterSubjects')) || [];
+        
+        // Update all text elements with translations
+        function updateLanguage() {
+            const lang = translations[currentLang];
+            
+            // Update header
+            document.querySelector('h1').innerHTML = `<i class="fas fa-calculator"></i> ${lang.title}`;
+            document.querySelector('.subtitle').textContent = lang.subtitle;
+            
+            // Update language button
+            document.querySelector('#languageSwitch i').nextSibling.textContent = ` ${lang.languageButton}`;
+            
+            // Update form
+            document.querySelectorAll('.card h2')[0].innerHTML = `<i class="fas fa-plus-circle"></i> ${lang.addSubject}`;
+            document.querySelector('label[for="subjectName"]').textContent = lang.subjectName;
+            document.querySelectorAll('.form-section label')[0].textContent = lang.assessmentComponents;
+            document.querySelector('label[for="hasTD"]').textContent = lang.td;
+            document.querySelector('label[for="hasTP"]').textContent = lang.tp;
+            document.querySelector('label[for="hasExam"]').textContent = lang.exam;
+            document.querySelector('label[for="tdPoints"]').textContent = lang.tdPoints;
+            document.querySelector('label[for="tpPoints"]').textContent = lang.tpPoints;
+            document.querySelector('label[for="examPoints"]').textContent = lang.examPoints;
+            document.querySelector('#weightingSection label').textContent = lang.weightingScheme;
+            document.querySelector('label[for="weight40Radio"]').textContent = lang.weighting40;
+            document.querySelector('label[for="weight50Radio"]').textContent = lang.weighting50;
+            document.querySelector('label[for="coefficient"]').textContent = lang.coefficient;
+            document.querySelector('.btn-secondary i').nextSibling.textContent = ` ${lang.addSubjectButton}`;
+            
+            // Update instructions
+            document.querySelector('.instructions h3').innerHTML = `<i class="fas fa-info-circle"></i> ${lang.instructionsTitle}`;
+            const instructions = document.querySelectorAll('.instructions li');
+            instructions[0].innerHTML = `<strong>${lang.instruction1.split(':')[0]}:</strong> ${lang.instruction1.split(':')[1]}`;
+            instructions[1].innerHTML = `<strong>${lang.instruction2.split(':')[0]}:</strong> ${lang.instruction2.split(':')[1]}`;
+            instructions[2].innerHTML = `<strong>${lang.instruction3.split(':')[0]}:</strong> ${lang.instruction3.split(':')[1]}`;
+            instructions[3].innerHTML = `<strong>${lang.instruction4.split(':')[0]}:</strong> ${lang.instruction4.split(':')[1]}`;
+            instructions[4].innerHTML = `<strong>${lang.instruction5.split(':')[0]}:</strong> ${lang.instruction5.split(':')[1]}`;
+            instructions[5].innerHTML = `<strong>${lang.instruction6.split(':')[0]}:</strong> ${lang.instruction6.split(':')[1]}`;
+            
+            // Update subjects table
+            document.querySelectorAll('.card h2')[1].innerHTML = `<i class="fas fa-list-alt"></i> ${lang.subjectsTitle}`;
+            const tableHeaders = document.querySelectorAll('#subjectsTable th');
+            tableHeaders[0].textContent = lang.tableSubject;
+            tableHeaders[1].textContent = lang.tableComponents;
+            tableHeaders[2].textContent = lang.tableWeighting;
+            tableHeaders[3].textContent = lang.tableCoefficient;
+            tableHeaders[4].textContent = lang.tableAverage;
+            tableHeaders[5].textContent = lang.tableActions;
+            
+            // Update empty message
+            document.querySelector('#emptyMessage p').textContent = lang.noSubjects;
+            
+            // Update results
+            document.querySelector('.result-label').textContent = lang.semesterAverage;
+            if (document.getElementById('gradeText').textContent === 'Add subjects to calculate' || 
+                document.getElementById('gradeText').textContent === 'أضف مواد للحساب') {
+                document.getElementById('gradeText').textContent = lang.addSubjectsToCalculate;
+            }
+            
+            // Update buttons
+            document.querySelector('#calculateBtn i').nextSibling.textContent = ` ${lang.calculateAverage}`;
+            document.querySelector('#clearAllBtn i').nextSibling.textContent = ` ${lang.clearAll}`;
+            document.querySelector('#exportBtn i').nextSibling.textContent = ` ${currentLang === 'en' ? 'Export Data' : 'تصدير البيانات'}`;
+            document.querySelector('#showImportModal i').nextSibling.textContent = ` ${currentLang === 'en' ? 'Import Data' : 'استيراد البيانات'}`;
+            
+            // Update export/import modal
+            document.querySelector('#exportModal h2').innerHTML = `<i class="fas fa-file-export"></i> ${lang.exportImport}`;
+            document.querySelector('.warning-message').innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${lang.importWarning} ${document.querySelector('.subject-count').textContent} ${currentLang === 'en' ? 'subjects.' : 'مادة.'}`;
+            document.querySelector('label[for="exportData"]').textContent = lang.exportImport.split('/')[0] + ' Data (JSON)';
+            document.querySelector('label[for="importData"]').textContent = lang.exportImport.split('/')[1] + ' Data';
+            exportDataTextarea.placeholder = lang.exportPlaceholder;
+            importDataTextarea.placeholder = lang.importPlaceholder;
+            document.querySelector('#copyData i').nextSibling.textContent = ` ${lang.copyButton}`;
+            document.querySelector('#importDataBtn i').nextSibling.textContent = ` ${lang.importButton}`;
+            
+            // Update footer
+            document.querySelector('.footer-text').textContent = lang.websiteBy;
+            
+            // Update placeholders
+            document.getElementById('subjectName').placeholder = currentLang === 'en' ? 'e.g., Mathematics' : 'مثال: رياضيات';
+            
+            // Update direction for Arabic
+            if (currentLang === 'ar') {
+                document.body.setAttribute('dir', 'rtl');
+                document.body.style.textAlign = 'right';
+            } else {
+                document.body.setAttribute('dir', 'ltr');
+                document.body.style.textAlign = 'left';
+            }
+            
+            // Save language preference
+            localStorage.setItem('language', currentLang);
+            
+            // Update grade text if average is already calculated
+            if (subjects.length > 0) {
+                calculateOverallAverage();
+            }
+        }
+        
+        // Toggle input visibility based on checkboxes
+        function toggleInputs() {
+            const tdChecked = hasTD.checked;
+            const tpChecked = hasTP.checked;
+            const examChecked = hasExam.checked;
+            
+            tdGroup.classList.toggle('hidden', !tdChecked);
+            tpGroup.classList.toggle('hidden', !tpChecked);
+            examGroup.classList.toggle('hidden', !examChecked);
+            
+            // Show weighting section only if there's an exam AND at least one of TD or TP
+            const showWeighting = examChecked && (tdChecked || tpChecked);
+            weightingSection.classList.toggle('hidden', !showWeighting);
+            
+            // Validate that at least one component is selected
+            const componentError = document.getElementById('componentError');
+            if (!tdChecked && !tpChecked && !examChecked) {
+                componentError.style.display = 'block';
+            } else {
+                componentError.style.display = 'none';
+            }
+            
+            // Update required attribute for inputs based on checkboxes
+            document.getElementById('tdPoints').required = tdChecked;
+            document.getElementById('tpPoints').required = tpChecked;
+            document.getElementById('examPoints').required = examChecked;
+        }
+        
+        // Initialize toggle on page load
+        toggleInputs();
+        
+        // Add event listeners to checkboxes
+        hasTD.addEventListener('change', toggleInputs);
+        hasTP.addEventListener('change', toggleInputs);
+        hasExam.addEventListener('change', toggleInputs);
+        
+        // Weighting selection styling
+        weight40.addEventListener('click', function() {
+            weight40.classList.add('selected');
+            weight50.classList.remove('selected');
+            weight40Radio.checked = true;
+        });
+        
+        weight50.addEventListener('click', function() {
+            weight50.classList.add('selected');
+            weight40.classList.remove('selected');
+            weight50Radio.checked = true;
+        });
+        
+        // Calculate subject average based on assessment types and weighting scheme
+        function calculateSubjectAverage(subject) {
+            let average = 0;
+            
+            // Check if only one component is selected
+            const components = [];
+            if (subject.hasTD) components.push('TD');
+            if (subject.hasTP) components.push('TP');
+            if (subject.hasExam) components.push('Exam');
+            
+            // Case 1: Only one component (100% of that component)
+            if (components.length === 1) {
+                if (subject.hasTD) average = subject.tdPoints;
+                else if (subject.hasTP) average = subject.tpPoints;
+                else if (subject.hasExam) average = subject.examPoints;
+            }
+            // Case 2: Multiple components with weighting scheme
+            else {
+                // Calculate continuous assessment average (TD and/or TP)
+                let continuousAverage = 0;
+                let continuousCount = 0;
+                
+                if (subject.hasTD) {
+                    continuousAverage += subject.tdPoints;
+                    continuousCount++;
+                }
+                
+                if (subject.hasTP) {
+                    continuousAverage += subject.tpPoints;
+                    continuousCount++;
+                }
+                
+                if (continuousCount > 0) {
+                    continuousAverage = continuousAverage / continuousCount;
+                }
+                
+                // Determine weights based on scheme
+                let continuousWeight = 0.4; // Default 40%
+                let examWeight = 0.6; // Default 60%
+                
+                if (subject.weightingScheme === '50-50') {
+                    continuousWeight = 0.5;
+                    examWeight = 0.5;
+                }
+                
+                // Calculate average based on components present
+                if (subject.hasExam && (subject.hasTD || subject.hasTP)) {
+                    // TD/TP + Exam
+                    average = (continuousAverage * continuousWeight) + (subject.examPoints * examWeight);
+                } else if (subject.hasTD && subject.hasTP && !subject.hasExam) {
+                    // TD + TP only (no exam) - simple average
+                    average = continuousAverage;
+                }
+            }
+            
+            return Math.min(20, Math.max(0, average)); // Ensure average is between 0 and 20
+        }
+        
+        // Format number to 2 decimal places
+        function formatNumber(num) {
+            return parseFloat(num).toFixed(2);
+        }
+        
+        // Get component icons
+        function getComponentIcons(components) {
+            let icons = '';
+            if (components.includes('TD')) icons += '<i class="fas fa-chart-line component-icon" title="TD"></i>';
+            if (components.includes('TP')) icons += '<i class="fas fa-flask component-icon" title="TP"></i>';
+            if (components.includes('Exam')) icons += '<i class="fas fa-file-alt component-icon" title="Exam"></i>';
+            return icons;
+        }
+        
+        // Get weighting text
+        function getWeightingText(weightingScheme, hasTD, hasTP, hasExam) {
+            const components = [];
+            if (hasTD) components.push('TD');
+            if (hasTP) components.push('TP');
+            
+            // Single component
+            if (components.length === 0 || !hasExam) {
+                return '100%';
+            }
+            
+            // Multiple components with weighting
+            if (weightingScheme === '40-60') {
+                return '40/60';
+            } else {
+                return '50/50';
+            }
+        }
+        
+        // Add subject to the table
+        function addSubjectToTable(subject, index) {
+            // Create table row
+            const row = document.createElement('tr');
+            
+            // Calculate subject average
+            const subjectAverage = calculateSubjectAverage(subject);
+            
+            // Determine which components are included
+            let components = [];
+            if (subject.hasTD) components.push('TD');
+            if (subject.hasTP) components.push('TP');
+            if (subject.hasExam) components.push('Exam');
+            
+            // Get component icons
+            const componentIcons = getComponentIcons(components);
+            
+            // Get weighting text
+            const weightingText = getWeightingText(subject.weightingScheme, subject.hasTD, subject.hasTP, subject.hasExam);
+            
+            row.innerHTML = `
+                <td class="subject-name">${subject.name}</td>
+                <td>${componentIcons} ${components.join(' + ')}</td>
+                <td>${weightingText}</td>
+                <td class="coefficient">${subject.coefficient}</td>
+                <td class="average">${formatNumber(subjectAverage)}</td>
+                <td>
+                    <div class="actions">
+                        <button class="action-btn edit-btn" data-index="${index}" title="${currentLang === 'en' ? 'Edit subject' : 'تعديل المادة'}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" data-index="${index}" title="${currentLang === 'en' ? 'Delete subject' : 'حذف المادة'}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            subjectsTableBody.appendChild(row);
+            
+            // Show table and hide empty message
+            emptyMessage.classList.add('hidden');
+        }
+        
+        // Render all subjects in the table
+        function renderSubjects() {
+            // Clear table
+            subjectsTableBody.innerHTML = '';
+            
+            if (subjects.length === 0) {
+                emptyMessage.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+                return;
+            }
+            
+            // Add each subject to the table
+            subjects.forEach((subject, index) => {
+                addSubjectToTable(subject, index);
+            });
+            
+            resultContainer.classList.remove('hidden');
+        }
+        
+        // Calculate overall average
+        function calculateOverallAverage() {
+            if (subjects.length === 0) {
+                averageResult.textContent = '0.00';
+                gradeText.textContent = translations[currentLang].addSubjectsToCalculate;
+                return;
+            }
+            
+            let totalWeightedSum = 0;
+            let totalCoefficients = 0;
+            
+            subjects.forEach(subject => {
+                const subjectAverage = calculateSubjectAverage(subject);
+                totalWeightedSum += subjectAverage * subject.coefficient;
+                totalCoefficients += parseInt(subject.coefficient);
+            });
+            
+            const overallAverage = totalWeightedSum / totalCoefficients;
+            averageResult.textContent = formatNumber(overallAverage);
+            
+            // Determine grade text - UPDATED FOR MULTILANGUAGE
+            let grade = '';
+            if (overallAverage >= 16) {
+                grade = translations[currentLang].excellent;
+                gradeText.style.color = '#27ae60';
+            } else if (overallAverage >= 14) {
+                grade = translations[currentLang].veryGood;
+                gradeText.style.color = '#2ecc71';
+            } else if (overallAverage >= 12) {
+                grade = translations[currentLang].good;
+                gradeText.style.color = '#3498db';
+            } else if (overallAverage >= 10) {
+                grade = translations[currentLang].pass;
+                gradeText.style.color = '#f39c12';
+            } else {
+                grade = translations[currentLang].needsImprovement;
+                gradeText.style.color = '#e74c3c';
+            }
+            
+            gradeText.textContent = grade;
+            
+            // Save to localStorage
+            localStorage.setItem('semesterSubjects', JSON.stringify(subjects));
+        }
+        
+        // Validate form inputs
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Check at least one component is selected
+            if (!hasTD.checked && !hasTP.checked && !hasExam.checked) {
+                document.getElementById('componentError').textContent = currentLang === 'en' ? 
+                    'Please select at least one component' : 
+                    'يرجى اختيار مكون واحد على الأقل';
+                document.getElementById('componentError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate TD points if TD is checked
+            if (hasTD.checked) {
+                const tdValue = parseFloat(document.getElementById('tdPoints').value);
+                if (isNaN(tdValue) || tdValue < 0 || tdValue > 20) {
+                    document.getElementById('tdError').textContent = currentLang === 'en' ? 
+                        'TD points must be between 0 and 20' : 
+                        'يجب أن تكون نقاط التمارين بين 0 و 20';
+                    document.getElementById('tdError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            // Validate TP points if TP is checked
+            if (hasTP.checked) {
+                const tpValue = parseFloat(document.getElementById('tpPoints').value);
+                if (isNaN(tpValue) || tpValue < 0 || tpValue > 20) {
+                    document.getElementById('tpError').textContent = currentLang === 'en' ? 
+                        'TP points must be between 0 and 20' : 
+                        'يجب أن تكون نقاط العمل العملي بين 0 و 20';
+                    document.getElementById('tpError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            // Validate Exam points if Exam is checked
+            if (hasExam.checked) {
+                const examValue = parseFloat(document.getElementById('examPoints').value);
+                if (isNaN(examValue) || examValue < 0 || examValue > 20) {
+                    document.getElementById('examError').textContent = currentLang === 'en' ? 
+                        'Exam points must be between 0 and 20' : 
+                        'يجب أن تكون نقاط الامتحان بين 0 و 20';
+                    document.getElementById('examError').style.display = 'block';
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
+        }
+        
